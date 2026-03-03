@@ -107,3 +107,37 @@ install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/funkyactors-config-version.cmake"
   DESTINATION lib/cmake/funkyactors
 )
+
+# Optional: Build tests (ON by default for development)
+option(FUNKYACTORS_BUILD_TESTS "Build funkyactors unit tests" ON)
+if(FUNKYACTORS_BUILD_TESTS)
+  include(FetchContent)
+  FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/v1.15.2.zip
+  )
+  FetchContent_MakeAvailable(googletest)
+
+  # Suppress warnings for gtest and gmock
+  if(TARGET gtest)
+    target_compile_options(gtest PRIVATE -w)
+  endif()
+  if(TARGET gmock)
+    target_compile_options(gmock PRIVATE -w)
+  endif()
+
+  enable_testing()
+  add_executable(test_funkyactors
+    tests/test_example.cpp
+  )
+
+  target_link_libraries(test_funkyactors PRIVATE gtest_main funkyactors)
+  target_include_directories(test_funkyactors PRIVATE
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/tests
+  )
+  target_compile_options(test_funkyactors PRIVATE -Wall -Wextra -Wpedantic -Werror)
+
+  include(GoogleTest)
+  gtest_discover_tests(test_funkyactors)
+endif()

@@ -1,5 +1,7 @@
 # Funkyactors
 
+[![CI](https://github.com/mahush/funkyactors/actions/workflows/ci.yml/badge.svg)](https://github.com/mahush/funkyactors/actions/workflows/ci.yml)
+
 A minimal, type-safe actor framework built on standalone Asio for in-process concurrent programming.
 
 ## Overview
@@ -300,11 +302,27 @@ Actor code runs serialized on its strand - no manual locking needed. Topics are 
 - No manual cleanup or unsubscribe needed
 - Simple actor lifecycle - just let shared_ptr go out of scope
 
+## Building and Testing
+
+```bash
+# Build the library
+cmake -S . -B build
+cmake --build build
+
+# Run tests
+./build/test_funkyactors
+
+# Build without tests
+cmake -S . -B build -DFUNKYACTORS_BUILD_TESTS=OFF
+cmake --build build
+```
+
 ## Requirements
 
 - C++17 or later
-- Standalone Asio 1.30.2+ (header-only)
-- CMake 3.12+ (for building examples)
+- Standalone Asio 1.30.2+ (header-only, auto-downloaded)
+- CMake 3.12+
+- GoogleTest 1.15.2+ (for tests, auto-downloaded)
 
 ## Development
 
